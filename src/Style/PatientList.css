@@ -1,0 +1,17 @@
+/*.patientList {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  margin: 0;
+}*/
+
+.buttons{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 20px;
+}
+
+.patientListContainer{
+    padding: 10px;
+}
