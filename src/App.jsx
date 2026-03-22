@@ -4,8 +4,9 @@ import PatientList from './Patient/PatientList';
 import Login from './Login';
 import AppBar from '@mui/material/AppBar';
 import Button from "@mui/material/Button";
-import React, {useState} from 'react';
+import {useState} from 'react';
 import { Toolbar } from '@mui/material';
+import instanceAxios from './service/axios';
 
 
 
@@ -15,27 +16,55 @@ import { Toolbar } from '@mui/material';
 function App() {
   
   const [page, setPage] = useState({page : "home", datas : null});
+  const [authentificated, setAuthentificated] = useState(false);
+
+  const logout = (e) => {
+      instanceAxios.post('/logout')
+      .then((response) => {
+          console.info("logout");
+          setAuthentificated(false);
+          setPage({...page, page : "home", datas : null})
+        })
+      .catch((response) => {console.error(response);})
+  }
   
 
-  const renderPage = (page, setPage, loginInfos, setLoginInfo) => {
+  const menu = (auth) => {
+    if (auth) {
+      return (
+        <Toolbar className='menu-contener'>
+          
+          <Button color="inherit" onClick={()=>setPage({...page, page : "accueil", datas : null})}>Accueil</Button>
+          <Button color="inherit" onClick={()=>setPage({...page, page : "patientList", datas : null})}>Patient liste</Button>
+          <Button color="inherit" onClick={logout}>Logout</Button>
+        </Toolbar>
+      )
+    }
+    else {
+        <Toolbar className='menu-contener'>
+
+        </Toolbar>
+    }
+  }
+  
+  const renderPage = (page, setPage, authentificated, setAuthentificated) => {
     if (page.page === "home"){
-      return <Login page={page} setPage={setPage}/> 
+      return <Login page={page} setPage={setPage} setAuthentificated={setAuthentificated}/> 
     }
     else if (page.page === "patient") return <Patient page={page} setPage={setPage}/>;
     else if (page.page === "patientList") return <PatientList page={page} setPage={setPage}/>;
     return <div>Accueil</div>;
   };
 
+
+
   
   return (
     <><AppBar position="static">
-      <Toolbar className='menu-contener'>
-        <Button color="inherit" onClick={()=>setPage({page : "home", datas : null})}>Accueil</Button>
-        <Button color="inherit" onClick={()=>setPage({page, page : "patientList", datas : null})}>Patient liste</Button>
-      </Toolbar>
+      {menu(authentificated)}
       
     </AppBar>
-        {renderPage(page, setPage)}
+        {renderPage(page, setPage, authentificated, setAuthentificated)}
       </>
   );  
 }

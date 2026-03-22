@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import instanceAxios from '../service/axios';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -8,27 +7,71 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import '../Style/PatientList.css';
+import instanceAxios from '../service/axios';
+import { red } from '@mui/material/colors';
+
+
+
+
+
 
 
 function ListPatient({page, setPage}){
     
    const [patientList, setPatientList] = useState([]);
+   const [selectedPatient, setSelectedPatient] = useState(null);
 
-   useEffect(() => {
-
-        instanceAxios.get("/patient/list")
+   const fetchPatients = () => {
+    instanceAxios.get("/patient/list")
         .then((response)=> {console.log('liste:', response.data, "tout est parfais");
                             setPatientList(response.data);
                             })
         .catch((error) => {console.log('Error : ', error)})
+    };
+
+   useEffect(() => {
+
+        fetchPatients();
 
     },[])
 
+    //table event
     const onClickPatient = (e, patient) => {
         console.log(e);
+        setAnchorEl(null);
         setPage({...page, page : "patient", datas : patient});
     }
+
+    const onDeletePatient = (e,patient) => {
+        console.log("delete patient")
+        if (!selectedPatient) return;
+        console.info(patient);
+        instanceAxios.delete("/patient/" + patient.id)
+        .then((response) => {
+                             console.log(response.data);
+                             fetchPatients();
+        })
+        .catch((responce) => console.error(responce))
+        setAnchorEl(null);
+    }
+
+    //popup menu event
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClickContextMenu = (event, patient) => {
+        event.preventDefault();
+        console.log(event);
+        console.info(event.currentTarget);  
+        //setAnchorEl(event.currentTarget);
+        setAnchorEl({left : event.clientX, top : event.clientY})
+        setSelectedPatient(patient);
+    };
+  const handleCloseMenu = () => {
+        setAnchorEl(null);
+  };
     
     return(
             <div className='patientListContainer'>
@@ -50,7 +93,11 @@ function ListPatient({page, setPage}){
                     </TableHead>
                     <TableBody>
                     {patientList.map((p) => (
-                        <TableRow key={p.id} onClick={(e) => onClickPatient(e, p)} sx={{cursor : "pointer"}} hover>
+                        <TableRow key={p.id} 
+                                    onClick={(e) => onClickPatient(e, p)} 
+                                    onContextMenu={(e) => handleClickContextMenu(e,p)}
+                                    sx={{cursor : "pointer"}} 
+                                    hover>
                         <TableCell component="th" scope="row">
                             {p.id}
                         </TableCell>
@@ -65,6 +112,24 @@ function ListPatient({page, setPage}){
                     </TableBody>
                 </Table>
                 </TableContainer>
+                <Menu
+                    id="popup-menu"
+                    //anchorEl={anchorEl}
+                    anchorReference="anchorPosition"
+                    anchorPosition= {anchorEl}
+                    open={open}
+                    onClose={handleCloseMenu}
+                    slotProps={{
+                    list: {
+                        'aria-labelledby': 'basic-button',
+                    },
+                    }}
+                >
+                    <MenuItem onClick={(e, patient)=>onClickPatient(e, selectedPatient)}>Edit</MenuItem>
+                    <MenuItem 
+                            onClick={(e, patient)=>onDeletePatient(e, selectedPatient)} 
+                            sx={{color: "red"}}>Delete</MenuItem>
+                </Menu>
                 
             </div>
     );

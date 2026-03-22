@@ -5,14 +5,30 @@ import React, {useState} from 'react';
 import instanceAxios from './service/axios';
 
 
-function Login(page, setPage){
+function Login({page, setPage, setAuthentificated}){
     
     const [loginInfos, setLoginInfo] = useState({ident : "", pass : ""});
 
     const handleSubmit = (e) => {
-        instanceAxios.post("/login", loginInfos)
-        .then((response) => {response.status;})
-        .cath((response) => {response;})
+        e.preventDefault();
+        //const data = new URLSearchParams();
+        //data.append("username", loginInfos.ident);
+        //data.append("password", loginInfos.pass); 
+        instanceAxios.post("/login", 
+                            loginInfos
+                            //{headers: {
+                            //    "Content-Type": "application/x-www-form-urlencoded"
+                            //    }
+                            //}
+                        )
+        .then((response) => {
+            console.info(response.status);
+            console.info(response.data);
+            setPage("accueil");
+            setAuthentificated(true);
+
+        })
+        .catch((response) => {console.error(response);})
         
     }
     
