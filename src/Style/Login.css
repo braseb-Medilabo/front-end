@@ -4,3 +4,7 @@
   place-items: center;
   margin: 0;
 }
+
+.errorMessage{
+  color: red;
+}

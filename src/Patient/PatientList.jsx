@@ -23,14 +23,34 @@ function ListPatient({page, setPage}){
     
    const [patientList, setPatientList] = useState([]);
    const [selectedPatient, setSelectedPatient] = useState(null);
+   const [errorObject, setErrorObject] = useState({isError : false, errors : {}});
 
-   const fetchPatients = () => {
-    instanceAxios.get("/patient/list")
-        .then((response)=> {console.log('liste:', response.data, "tout est parfais");
-                            setPatientList(response.data);
-                            })
-        .catch((error) => {console.log('Error : ', error)})
-    };
+   function errorManagement(error) {
+        console.log(error);
+        console.log(error.response);
+        if (error.response) {
+           setErrorObject({...errorObject,isError : true, errors : {status : error.response.status, message : error.response.statusText}});
+        }
+       
+        else if (error.request) {
+            console.error("request error");
+            setErrorObject({...errorObject,isError : true, errors : {status : error.request.status, message : error.request.statusText}});
+        }
+        else{
+            console.error("Something went wrong");
+            setErrorObject({...errorObject,isError : true, errors : {status : 500, message : "Something went wrong"}});
+        }
+    }
+
+   function fetchPatients() {
+        instanceAxios.get("/patient/list")
+            .then((response) => {
+                console.log('liste:', response.data, "tout est parfais");
+                setPatientList(response.data);
+                setErrorObject({...errorObject,isError : false, errors : {}});
+            })
+            .catch((error) => { errorManagement(error) });
+    }
 
    useEffect(() => {
 
@@ -54,7 +74,7 @@ function ListPatient({page, setPage}){
                              console.log(response.data);
                              fetchPatients();
         })
-        .catch((responce) => console.error(responce))
+        .catch((error) => errorManagement(error))
         setAnchorEl(null);
     }
 
@@ -75,6 +95,9 @@ function ListPatient({page, setPage}){
     
     return(
             <div className='patientListContainer'>
+                {errorObject.isError && (
+                <div className='errorMessage'> {errorObject.errors.message}</div>
+                )}  
                 <div className='buttons'>
                     <Button type="button" variant="contained" onClick={(e) => onClickPatient(e, null)}>Create new Patient</Button>
                 </div>

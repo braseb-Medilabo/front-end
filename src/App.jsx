@@ -16,45 +16,46 @@ import instanceAxios from './service/axios';
 function App() {
   
   const [page, setPage] = useState({page : "home", datas : null});
-  const [authentificated, setAuthentificated] = useState(false);
+  const [authentificated, setAuthentificated] = useState({status : false, error : false, message : ""});
+  
 
-  const logout = (e) => {
-      instanceAxios.post('/logout')
+  function logout(e) {
+    instanceAxios.post('/logout')
       .then((response) => {
-          console.info("logout");
-          setAuthentificated(false);
-          setPage({...page, page : "home", datas : null})
-        })
-      .catch((response) => {console.error(response);})
+        console.info("logout");
+        setAuthentificated({...authentificated, status : false, error : false, message : ""});
+        setPage({ ...page, page: "home", datas: null });
+      })
+      .catch((response) => { console.error(response); });
   }
   
 
-  const menu = (auth) => {
-    if (auth) {
+  function menu(auth) {
+    if (auth.status) {
       return (
         <Toolbar className='menu-contener'>
-          
-          <Button color="inherit" onClick={()=>setPage({...page, page : "accueil", datas : null})}>Accueil</Button>
-          <Button color="inherit" onClick={()=>setPage({...page, page : "patientList", datas : null})}>Patient liste</Button>
+
+          <Button color="inherit" onClick={() => setPage({ ...page, page: "accueil", datas: null })}>Accueil</Button>
+          <Button color="inherit" onClick={() => setPage({ ...page, page: "patientList", datas: null })}>Patient liste</Button>
           <Button color="inherit" onClick={logout}>Logout</Button>
         </Toolbar>
-      )
+      );
     }
     else {
-        <Toolbar className='menu-contener'>
+      <Toolbar className='menu-contener'>
 
-        </Toolbar>
+      </Toolbar>;
     }
   }
   
-  const renderPage = (page, setPage, authentificated, setAuthentificated) => {
-    if (page.page === "home"){
-      return <Login page={page} setPage={setPage} setAuthentificated={setAuthentificated}/> 
+  function renderPage(page, setPage, authentificated, setAuthentificated) {
+    if (page.page === "home") {
+      return <Login page={page} setPage={setPage} authentificated={authentificated} setAuthentificated={setAuthentificated} />;
     }
-    else if (page.page === "patient") return <Patient page={page} setPage={setPage}/>;
-    else if (page.page === "patientList") return <PatientList page={page} setPage={setPage}/>;
+    else if (page.page === "patient") return <Patient page={page} setPage={setPage} />;
+    else if (page.page === "patientList") return <PatientList page={page} setPage={setPage} />;
     return <div>Accueil</div>;
-  };
+  }
 
 
 

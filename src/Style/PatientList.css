@@ -12,6 +12,14 @@
     padding: 20px;
 }
 
+.errorMessage{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 5px;
+    color: red;
+}
+
 .patientListContainer{
     padding: 10px;
 }
