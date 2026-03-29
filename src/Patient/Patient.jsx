@@ -49,7 +49,12 @@ function Patient({page, setPage}){
         }
         else if (error.request) {
             console.error("request error");
-            setErrorObject({...errorObject,isError : true, errors : {status : error.request.status, message : error.request.statusText}});
+           if (error.request.status === 0){
+                setErrorObject({...errorObject,isError : true, errors : {status : 500, message : "No gateway"}});
+            }
+            else{
+                setErrorObject({...errorObject,isError : true, errors : {status : error.request.status, message : error.request.statusText}});
+            }
         }
         else{
             console.error("Something went wrong");
