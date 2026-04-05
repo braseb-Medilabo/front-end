@@ -50,7 +50,7 @@ function Patient({page, setPage}){
         else if (error.request) {
             console.error("request error");
            if (error.request.status === 0){
-                setErrorObject({...errorObject,isError : true, errors : {status : 500, message : "No gateway"}});
+                setErrorObject({...errorObject,isError : true, errors : {status : 500, message : "Network error, please try again"}});
             }
             else{
                 setErrorObject({...errorObject,isError : true, errors : {status : error.request.status, message : error.request.statusText}});
