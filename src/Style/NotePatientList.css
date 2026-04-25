@@ -1,0 +1,25 @@
+.buttons{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 20px;
+}
+
+.errorMessage{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 5px;
+    color: red;
+}
+
+.patientNoteListContainer{
+    padding: 10px;
+}
+
+.patientButtons{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 20px;
+}
