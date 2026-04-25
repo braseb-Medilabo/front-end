@@ -15,10 +15,6 @@ import { red } from '@mui/material/colors';
 
 
 
-
-
-
-
 function ListPatient({page, setPage}){
     
    const [patientList, setPatientList] = useState([]);
@@ -66,23 +62,36 @@ function ListPatient({page, setPage}){
     },[])
 
     //table event
-    const onClickPatient = (e, patient) => {
+    function onClickPatient(e, patient) {
         console.log(e);
         setAnchorEl(null);
-        setPage({...page, page : "patient", datas : patient});
+        setPage({ ...page, page: "patient", datas: patient });
     }
 
-    const onDeletePatient = (e,patient) => {
-        console.log("delete patient")
+    function onClickNotePatient(e, patient) {
+        console.log(e);
+        setAnchorEl(null);
+        setPage({ ...page, page: "note_patient", datas: patient });
+    }
+
+    async function onDeletePatient(e, patient) {
+        console.log("delete patient");
         if (!selectedPatient) return;
         console.info(patient);
-        instanceAxios.delete("/patient/" + patient.id)
-        .then((response) => {
-                             console.log(response.data);
-                             fetchPatients();
-        })
-        .catch((error) => errorManagement(error))
-        setAnchorEl(null);
+        try {
+            await instanceAxios.delete("/patient/note/" + patient.id);
+            const response = await instanceAxios.delete("/patient/" + patient.id);
+            console.log(response.data);
+            fetchPatients();
+
+        } catch (error) {
+            errorManagement(error);
+        } finally {
+            setAnchorEl(null);
+        }
+
+
+
     }
 
     //popup menu event
@@ -155,6 +164,7 @@ function ListPatient({page, setPage}){
                     },
                     }}
                 >
+                    <MenuItem onClick={(e, patient)=>onClickNotePatient(e, selectedPatient)}>View notes</MenuItem>
                     <MenuItem onClick={(e, patient)=>onClickPatient(e, selectedPatient)}>Edit</MenuItem>
                     <MenuItem 
                             onClick={(e, patient)=>onDeletePatient(e, selectedPatient)} 

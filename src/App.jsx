@@ -1,6 +1,7 @@
 import './Style/App.css';
 import Patient from './Patient/Patient';
 import PatientList from './Patient/PatientList';
+import NotePatientList from './Patient/NotePatientList';
 import Login from './Login';
 import AppBar from '@mui/material/AppBar';
 import Button from "@mui/material/Button";
@@ -54,6 +55,7 @@ function App() {
     }
     else if (page.page === "patient") return <Patient page={page} setPage={setPage} />;
     else if (page.page === "patientList") return <PatientList page={page} setPage={setPage} />;
+    else if (page.page === "note_patient") return <NotePatientList page={page} setPage={setPage} />;
     return <div>Accueil</div>;
   }
 
