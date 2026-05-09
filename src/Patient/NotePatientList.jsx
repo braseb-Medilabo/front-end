@@ -59,7 +59,9 @@ function ListNotePatient({page, setPage}){
                 setPatientNoteList(response.data);
                 setErrorObject({...errorObject,isError : false, errors : {}});
             })
-            .catch((error) => { errorManagement(error) });
+            .catch((error) => { //errorManagement(error)
+                                setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
+                            });
     }
 
     const handleOpenDialog = () => setOpenDialog(true);
@@ -80,7 +82,8 @@ function ListNotePatient({page, setPage}){
                 
             })
             .catch((error) => {
-                errorManagement(error);
+                //errorManagement(error);
+                setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
             })
         
     };    

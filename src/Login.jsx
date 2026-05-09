@@ -30,14 +30,14 @@ function Login({page, setPage, authentificated, setAuthentificated}){
         })
         .catch((error) => {
             console.error(error);
-            console.error(error.request)
-            if (error.response){
+            //console.error(error.request)
+            /*if (error.response){
                 console.error(error.status)
                 if (error.status === 401){
                     setAuthentificated({...authentificated, status : false, error : true, message : "Invalid credentials"});
                 }
                 else{
-                     setAuthentificated({...authentificated, status : false, error : true, message : "Something went wrong"});
+                        setAuthentificated({...authentificated, status : false, error : true, message : "Something went wrong"});
                 }
             }
             else if (error.request) {
@@ -45,7 +45,9 @@ function Login({page, setPage, authentificated, setAuthentificated}){
             }
             else{
                 setAuthentificated({...authentificated, status : false, error : true, message : "Something went wrong"});
-            }
+            }*/
+            
+            setAuthentificated({...authentificated, status : false, error : true, message : error.message})
            
         })
         

@@ -52,7 +52,9 @@ function ListPatient({page, setPage}){
                 setPatientList(response.data);
                 setErrorObject({...errorObject,isError : false, errors : {}});
             })
-            .catch((error) => { errorManagement(error) });
+            .catch((error) => { //errorManagement(error)
+                                setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
+                            });
     }
 
    useEffect(() => {
@@ -85,7 +87,8 @@ function ListPatient({page, setPage}){
             fetchPatients();
 
         } catch (error) {
-            errorManagement(error);
+            //errorManagement(error);
+            setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
         } finally {
             setAnchorEl(null);
         }

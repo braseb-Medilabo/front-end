@@ -75,7 +75,9 @@ function Patient({page, setPage}){
 
                 })
                 .catch((error) => {
-                    errorManagement(error);
+                    //errorManagement(error);
+                    console.log(error);
+                    setErrorObject({...errorObject, isError : true, errors : {status : error.status, message : error.message, }})
                 })
         }
                     
@@ -88,7 +90,8 @@ function Patient({page, setPage}){
 
                 })
                 .catch((error) => {
-                    errorManagement(error);
+                    //errorManagement(error);
+                    setErrorObject({...errorObject, isError : true, errors : {status : error.status, message : error.message, }})
                 });
         }
     }
