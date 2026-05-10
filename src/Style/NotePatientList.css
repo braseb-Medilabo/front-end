@@ -23,3 +23,29 @@
     justify-content: space-around;
     padding: 20px;
 }
+
+.patientRisk{
+    text-align: center;
+    font-size: 80px;
+    padding: 10px;
+}
+
+.patientRisk.none {
+    color: green;
+}
+
+.patientRisk.borderline {
+    color: orange;
+}
+
+.patientRisk.indanger {
+    color: red;
+}
+
+.patientRisk.earlyonset {
+    color: darkred;
+}
+
+.patientRisk.unknown {
+    color: gray;
+}

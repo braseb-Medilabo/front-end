@@ -26,41 +26,7 @@ function Patient({page, setPage}){
     useEffect(()=>{
        console.info(errorObject);
     }, [errorObject]);
-
-
-    function errorManagement(error) {
-        if (error.response) {
-
-            const data = error.response.data;
-
-            if (data){
-                if (data.errors) {
-                    console.log('Validation error', data.errors);
-                    setErrorObject({...errorObject,isError : true, errors : data.errors});
-                
-                }
-                else{
-                    console.error("no errors in datas");
-                    setErrorObject({...errorObject,isError : true, errors : {status : data.status, message : data.error}});
-                }
-            }
-
-            
-        }
-        else if (error.request) {
-            console.error("request error");
-           if (error.request.status === 0){
-                setErrorObject({...errorObject,isError : true, errors : {status : 500, message : "Network error, please try again"}});
-            }
-            else{
-                setErrorObject({...errorObject,isError : true, errors : {status : error.request.status, message : error.request.statusText}});
-            }
-        }
-        else{
-            console.error("Something went wrong");
-            setErrorObject({...errorObject,isError : true, errors : {status : 500, message : "Something went wrong"}});
-        }
-    }
+   
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -75,8 +41,6 @@ function Patient({page, setPage}){
 
                 })
                 .catch((error) => {
-                    //errorManagement(error);
-                    console.log(error);
                     setErrorObject({...errorObject, isError : true, errors : {status : error.status, message : error.message, }})
                 })
         }
@@ -90,7 +54,6 @@ function Patient({page, setPage}){
 
                 })
                 .catch((error) => {
-                    //errorManagement(error);
                     setErrorObject({...errorObject, isError : true, errors : {status : error.status, message : error.message, }})
                 });
         }

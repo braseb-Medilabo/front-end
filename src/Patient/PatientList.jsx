@@ -21,38 +21,14 @@ function ListPatient({page, setPage}){
    const [selectedPatient, setSelectedPatient] = useState(null);
    const [errorObject, setErrorObject] = useState({isError : false, errors : {}});
 
-   function errorManagement(error) {
-        console.log(error);
-        console.log(error.response);
-        if (error.response) {
-           setErrorObject({...errorObject,isError : true, errors : {status : error.response.status, message : error.response.statusText}});
-        }
-       
-        else if (error.request) {
-            console.error("request error");
-            console.log(error.request.status);
-            if (error.request.status === 0){
-                setErrorObject({...errorObject,isError : true, errors : {status : 500, message : "Network error, please try again"}});
-            }
-            else{
-                setErrorObject({...errorObject,isError : true, errors : {status : error.request.status, message : error.request.statusText}});
-            }
-            
-        }
-        else{
-            console.error("Something went wrong");
-            setErrorObject({...errorObject,isError : true, errors : {status : 500, message : "Something went wrong"}});
-        }
-    }
-
-   function fetchPatients() {
+  function fetchPatients() {
         instanceAxios.get("/patient/list")
             .then((response) => {
-                console.log('liste:', response.data, "tout est parfais");
+                console.log('liste:', response.data, "ok");
                 setPatientList(response.data);
                 setErrorObject({...errorObject,isError : false, errors : {}});
             })
-            .catch((error) => { //errorManagement(error)
+            .catch((error) => { 
                                 setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
                             });
     }
@@ -87,7 +63,6 @@ function ListPatient({page, setPage}){
             fetchPatients();
 
         } catch (error) {
-            //errorManagement(error);
             setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
         } finally {
             setAnchorEl(null);

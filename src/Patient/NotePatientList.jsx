@@ -17,51 +17,21 @@ function ListNotePatient({page, setPage}){
     const [errorObject, setErrorObject] = useState({isError : false, errors : {}});
     const [openDialog, setOpenDialog] = useState(false);
     const [note, setNote] = useState("");
+    const [riskDiabete, setRiskDiabete] = useState("");
 
-   function errorManagement(error) {
-        if (error.response) {
-
-            const data = error.response.data;
-
-            if (data){
-                if (data.errors) {
-                    console.log('Validation error', data.errors);
-                    setErrorObject({...errorObject,isError : true, errors : data.errors});
-                
-                }
-                else{
-                    console.error("no errors in datas");
-                    setErrorObject({...errorObject,isError : true, errors : {status : data.status, message : data.error}});
-                }
-            }
-
-            
+    async function fetchNotePatients(patient) {
+        try{
+            const response = await instanceAxios.get("/patient/note/" + patient.id);
+            console.log('liste:', response.data, "ok");
+            setPatientNoteList(response.data);
+            const risk = await instanceAxios.get("/patient/risk/" + patient.id);
+            setRiskDiabete(risk?.data || "");
+            setErrorObject({...errorObject,isError : false, errors : {}});
+        }catch (error){
+            setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
         }
-        else if (error.request) {
-            console.error("request error");
-           if (error.request.status === 0){
-                setErrorObject({...errorObject,isError : true, errors : {status : 500, message : "Network error, please try again"}});
-            }
-            else{
-                setErrorObject({...errorObject,isError : true, errors : {status : error.request.status, message : error.request.statusText}});
-            }
-        }
-        else{
-            console.error("Something went wrong");
-            setErrorObject({...errorObject,isError : true, errors : {status : 500, message : "Something went wrong"}});
-        }
-    }
-
-    function fetchNotePatients(patient) {
-        instanceAxios.get("/patient/note/" + patient.id)
-            .then((response) => {
-                console.log('liste:', response.data, "tout est parfais");
-                setPatientNoteList(response.data);
-                setErrorObject({...errorObject,isError : false, errors : {}});
-            })
-            .catch((error) => { //errorManagement(error)
-                                setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
-                            });
+     
+        
     }
 
     const handleOpenDialog = () => setOpenDialog(true);
@@ -82,7 +52,6 @@ function ListNotePatient({page, setPage}){
                 
             })
             .catch((error) => {
-                //errorManagement(error);
                 setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
             })
         
@@ -106,6 +75,20 @@ function ListNotePatient({page, setPage}){
                 <div className='buttons'>
                     <Button type="button" variant="contained" onClick={(e) => handleOpenDialog(e, null)}>Append a note for the patient</Button>
                 </div>
+                <div className='patientButtons'>
+                    <Button type='button' 
+                            variant='contained' 
+                            onClick={()=> setPage({...page, page : "patientList", data : null})}>Return</Button>
+                </div>
+                <div
+                    className={`patientRisk ${
+                        riskDiabete.code
+                            ? riskDiabete.code.replace(/\s+/g, "").toLowerCase()
+                            : "unknown"
+                    }`}
+                >
+                    {riskDiabete.label || "Unable to get the risk"}
+                </div>
                 <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} >
                     <TableHead>
@@ -127,6 +110,7 @@ function ListNotePatient({page, setPage}){
                     </TableBody>
                 </Table>
                 </TableContainer>
+                
                 <Dialog open={openDialog} onClose={handleCloseDialog}
                          fullWidth         // prend toute la largeur disponible
                         maxWidth="md">     
@@ -152,11 +136,7 @@ function ListNotePatient({page, setPage}){
                         </Button>
                     </DialogActions>
                 </Dialog>
-                <div className='patientButtons'>
-                    <Button type='button' 
-                            variant='contained' 
-                            onClick={()=> setPage({...page, page : "patientList", data : null})}>Return</Button>
-                </div>
+                
                 
                 
             </div>
