@@ -11,6 +11,8 @@ import instanceAxios from '../service/axios';
 
 function Patient({page, setPage}){
 
+    const apiPrefix = "/api/v1";
+
     const [formData, setFormData] = useState({
         lastName: '',
         firstName: '',
@@ -32,7 +34,7 @@ function Patient({page, setPage}){
         e.preventDefault();
         console.log('Form submitted:', formData);
         if (page.datas != null) {
-            instanceAxios.put("/patient/" + formData.id, formData)
+            instanceAxios.put(apiPrefix + "/patient/" + formData.id, formData)
                 .then((response) => {
                     console.log('Form submitted:', formData, "all is right");
                     setPage({ ...page, page: "patientList", data: null });
@@ -46,7 +48,7 @@ function Patient({page, setPage}){
         }
                     
         else {
-            instanceAxios.post("/patient", formData).
+            instanceAxios.post(apiPrefix + "/patient", formData).
                 then((response) => {
                     console.log('Form submitted:', formData, "all is right");
                     setPage({ ...page, page: "patientList", data: null });

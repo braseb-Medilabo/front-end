@@ -7,6 +7,8 @@ import instanceAxios from './service/axios';
 
 function Login({page, setPage, authentificated, setAuthentificated}){
     
+    const apiPrefix = "/api/v1";
+    
     const [loginInfos, setLoginInfo] = useState({ident : "", pass : ""});
 
     const handleSubmit = (e) => {
@@ -14,12 +16,12 @@ function Login({page, setPage, authentificated, setAuthentificated}){
         //const data = new URLSearchParams();
         //data.append("username", loginInfos.ident);
         //data.append("password", loginInfos.pass); 
-        instanceAxios.post("/login", 
-                            loginInfos
-                            //{headers: {
-                            //    "Content-Type": "application/x-www-form-urlencoded"
-                            //    }
-                            //}
+        instanceAxios.post(apiPrefix + "/login", 
+                                        loginInfos
+                                        //{headers: {
+                                        //    "Content-Type": "application/x-www-form-urlencoded"
+                                        //    }
+                                        //}
                         )
         .then((response) => {
             console.info(response.status);

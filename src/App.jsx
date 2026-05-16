@@ -16,19 +16,21 @@ import instanceAxios from './service/axios';
 
 function App() {
   
+  const apiPrefix = "/api/v1";
+  
   const [page, setPage] = useState({page : "home", datas : null});
   const [authentificated, setAuthentificated] = useState({status : false, error : false, message : ""});
   
 
   function logout(e) {
-    instanceAxios.post('/logout')
-      .then((response) => {
-        console.info("logout");
-        setAuthentificated({...authentificated, status : false, error : false, message : ""});
-        setPage({ ...page, page: "home", datas: null });
-      })
-      .catch((response) => { console.error(response); });
-  }
+    instanceAxios.post(apiPrefix + '/logout')
+                      .then((response) => {
+                        console.info("logout");
+                        setAuthentificated({...authentificated, status : false, error : false, message : ""});
+                        setPage({ ...page, page: "home", datas: null });
+                      })
+                      .catch((response) => { console.error(response); });
+                  }
   
 
   function menu(auth) {

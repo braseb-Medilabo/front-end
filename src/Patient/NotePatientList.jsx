@@ -19,12 +19,14 @@ function ListNotePatient({page, setPage}){
     const [note, setNote] = useState("");
     const [riskDiabete, setRiskDiabete] = useState("");
 
+    const apiPrefix = "/api/v1";
+
     async function fetchNotePatients(patient) {
         try{
-            const response = await instanceAxios.get("/patient/note/" + patient.id);
+            const response = await instanceAxios.get(apiPrefix + "/patient/note/" + patient.id);
             console.log('liste:', response.data, "ok");
             setPatientNoteList(response.data);
-            const risk = await instanceAxios.get("/patient/risk/" + patient.id);
+            const risk = await instanceAxios.get(apiPrefix + "/patient/risk/" + patient.id);
             setRiskDiabete(risk?.data || "");
             setErrorObject({...errorObject,isError : false, errors : {}});
         }catch (error){
@@ -41,10 +43,10 @@ function ListNotePatient({page, setPage}){
         console.log("Note to append :", note);
         if (!note || !page.datas) return; //security
         console.log(page);
-        instanceAxios.post("/patient/note", 
-                            {   "patId" : page.datas.id, 
-                                "patient" : page.datas.lastName,
-                                "note" : note})
+        instanceAxios.post(apiPrefix + "/patient/note", 
+                                    {   "patId" : page.datas.id, 
+                                        "patient" : page.datas.lastName,
+                                        "note" : note})
             .then ((response)=> {
                 setNote("");
                 fetchNotePatients(page.datas);

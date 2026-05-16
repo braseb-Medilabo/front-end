@@ -17,27 +17,29 @@ import { red } from '@mui/material/colors';
 
 function ListPatient({page, setPage}){
     
-   const [patientList, setPatientList] = useState([]);
-   const [selectedPatient, setSelectedPatient] = useState(null);
-   const [errorObject, setErrorObject] = useState({isError : false, errors : {}});
+    const apiPrefix = "/api/v1";
 
-  function fetchPatients() {
-        instanceAxios.get("/patient/list")
-            .then((response) => {
-                console.log('liste:', response.data, "ok");
-                setPatientList(response.data);
-                setErrorObject({...errorObject,isError : false, errors : {}});
-            })
-            .catch((error) => { 
-                                setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
-                            });
-    }
+    const [patientList, setPatientList] = useState([]);
+    const [selectedPatient, setSelectedPatient] = useState(null);
+    const [errorObject, setErrorObject] = useState({isError : false, errors : {}});
 
-   useEffect(() => {
+    function fetchPatients() {
+            instanceAxios.get(apiPrefix + "/patient/list")
+                .then((response) => {
+                    console.log('liste:', response.data, "ok");
+                    setPatientList(response.data);
+                    setErrorObject({...errorObject,isError : false, errors : {}});
+                })
+                .catch((error) => { 
+                                    setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
+                                });
+        }
 
-        fetchPatients();
+    useEffect(() => {
 
-    },[])
+            fetchPatients();
+
+        },[])
 
     //table event
     function onClickPatient(e, patient) {
@@ -57,8 +59,8 @@ function ListPatient({page, setPage}){
         if (!selectedPatient) return;
         console.info(patient);
         try {
-            await instanceAxios.delete("/patient/note/" + patient.id);
-            const response = await instanceAxios.delete("/patient/" + patient.id);
+            await instanceAxios.delete(apiPrefix + "/patient/note/" + patient.id);
+            const response = await instanceAxios.delete(apiPrefix + "/patient/" + patient.id);
             console.log(response.data);
             fetchPatients();
 
