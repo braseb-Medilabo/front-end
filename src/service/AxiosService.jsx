@@ -1,5 +1,5 @@
 import axios from "axios";
-import {getAccessToken,setAccessToken, getRefreshToken, setRefreshToken, clearTokens} from "./tokenService";
+import { getAccessToken,setAccessToken, getRefreshToken, setRefreshToken, clearTokens } from "./tokenService";
 
 
 const instance = axios.create({

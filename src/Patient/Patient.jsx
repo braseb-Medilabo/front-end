@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import React, {useState, useEffect} from 'react';
-import instanceAxios from '../service/axios';
+import instanceAxios from '../service/AxiosService';
 
 
 function Patient({page, setPage}){
@@ -22,10 +22,9 @@ function Patient({page, setPage}){
 
     const [errorObject, setErrorObject] = useState({isError : false, error : {}});
     
-
-    useEffect(()=>{
+    /*useEffect(()=>{
        console.info(errorObject);
-    }, [errorObject]);
+    }, [errorObject]);*/
    
 
     function handleSubmit(e) {
@@ -58,17 +57,12 @@ function Patient({page, setPage}){
                 });
         }
     }
-    
-        
-
     useEffect(() => {
         console.log(page.datas);
         if (page.datas != null){
             setFormData(page.datas);
         }
     }, [])
-
-    
     
     return (
         <div className='patient'>
@@ -130,4 +124,4 @@ function Patient({page, setPage}){
     );
 }
 
-  export default Patient;
+export default Patient;

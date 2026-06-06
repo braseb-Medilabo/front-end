@@ -2,39 +2,32 @@ import './Style/Login.css'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import React, {useState} from 'react';
-import instanceAxios from './service/axios';
+import instanceAxios from './service/AxiosService';
 import { setAccessToken, setRefreshToken } from "./service/tokenService";
+import { useAuth } from './service/AuthContext';
 
 
-function Login({page, setPage, authentificated, setAuthentificated}){
+function Login(){
     
     const [loginInfos, setLoginInfo] = useState({username : "", password : ""});
+    const [authentificated, setAuthentificated] = useState({isError: false,  error : null})
+
+    const { login } = useAuth();
 
     async function handleSubmit(e) {
         e.preventDefault();
-
+       
         try{
             const response = await instanceAxios.post("/auth/login",
                                                     loginInfos)
             console.info(response.status);
             console.info(response.data);
-            //localStorage.setItem("token", response.data?.accessToken);
-            //localStorage.setItem("refreshToken", response.data?.refreshToken);
-            setAccessToken(response.data?.accessToken);
-            setRefreshToken(response.data?.refreshToken);
-            
-            const responseAuthentificated = await instanceAxios.get("/me")
-            console.info(responseAuthentificated.data);
-            setPage("accueil");
-            setAuthentificated({ ...authentificated, token: response.data?.accessToken, 
-                                                        refreshToken : response.data?.refreshToken, 
-                                                        isError: false, 
-                                                        error : {},
-                                                        userInfos: responseAuthentificated?.data });
+            login(response.data?.accessToken, response.data?.refreshToken);
+            setAuthentificated({...authentificated, isError : false, error : null});
             
         }catch(error){
             console.log("Authentification error", error);
-            setAuthentificated({ ...authentificated, token: null, isError: true, error: {"message" : error.message, "errors" : error?.errors }});
+            setAuthentificated({ ...authentificated, isError : true, error : {"message" : error.message, "errors" : error?.errors }});
         }
     }
     

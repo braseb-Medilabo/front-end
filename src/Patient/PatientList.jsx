@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import '../Style/PatientList.css';
-import instanceAxios from '../service/axios';
+import instanceAxios from '../service/AxiosService';
 import { red } from '@mui/material/colors';
 
 
