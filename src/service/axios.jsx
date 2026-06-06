@@ -27,6 +27,7 @@ instance.interceptors.response.use(
    (response) => response,
    async (error) => {
       console.log("error instance axios");
+      console.log(error.config);
 
       const originalRequest = error.config;
 
@@ -56,7 +57,8 @@ instance.interceptors.response.use(
                // Si access token expiré
                else if (
                      error.response?.status === 401 &&
-                     !originalRequest._retry
+                     !originalRequest._retry && 
+                     originalRequest.url !== "/auth/login"
                ) {
 
                   console.log("try to refresh token");
@@ -91,7 +93,8 @@ instance.interceptors.response.use(
                         return instance(originalRequest);
 
                      } catch (refreshError) {
-                        console.log("expired refresh token")
+                        console.log("expired refresh token");
+                        console.log(refreshError.error);
                         // refresh expiré => logout
                         clearTokens();
                         //setAccessToken(null);

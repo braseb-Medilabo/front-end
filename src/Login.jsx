@@ -8,7 +8,7 @@ import { setAccessToken, setRefreshToken } from "./service/tokenService";
 
 function Login({page, setPage, authentificated, setAuthentificated}){
     
-    const [loginInfos, setLoginInfo] = useState({ident : "", pass : ""});
+    const [loginInfos, setLoginInfo] = useState({username : "", password : ""});
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -28,28 +28,34 @@ function Login({page, setPage, authentificated, setAuthentificated}){
             setPage("accueil");
             setAuthentificated({ ...authentificated, token: response.data?.accessToken, 
                                                         refreshToken : response.data?.refreshToken, 
-                                                        error: false, 
-                                                        message: "", 
+                                                        isError: false, 
+                                                        error : {},
                                                         userInfos: responseAuthentificated?.data });
             
         }catch(error){
-            setAuthentificated({ ...authentificated, token: null, error: true, message: error.message });
+            console.log("Authentification error", error);
+            setAuthentificated({ ...authentificated, token: null, isError: true, error: {"message" : error.message, "errors" : error?.errors }});
         }
     }
     
     return(
     <div className='loginContainer'>
         <form className="form-container" onSubmit={handleSubmit}>
-            <TextField label="Login" 
+            <TextField label="Login"
+                        error={!!authentificated.error?.errors?.username}
+                        helperText={authentificated.error?.errors?.username} 
                         variant="outlined" 
-                        value={loginInfos.ident}
-                        onChange={(e)=>setLoginInfo({...loginInfos, ident : e.target.value})}/>
-            <TextField label="Password" 
-                    variant="outlined" 
-                    value={loginInfos.pass}
-                    onChange={(e)=>setLoginInfo({...loginInfos, pass : e.target.value})}/>
-            {authentificated.error && (
-                <div className='errorMessage'> {authentificated.message}</div>
+                        value={loginInfos.username}
+                        onChange={(e)=>setLoginInfo({...loginInfos, username : e.target.value})}/>
+            <TextField label="Password"
+                        type="password"
+                        error={!!authentificated.error?.errors?.password}
+                        helperText={authentificated.error?.errors?.password} 
+                        variant="outlined" 
+                        value={loginInfos.password}
+                        onChange={(e)=>setLoginInfo({...loginInfos, password : e.target.value})}/>
+            {authentificated.isError && (
+                <div className='errorMessage'> {authentificated.error.message || "Unnknow error" }</div>
             )}
             <Button type="submit" 
                     variant="contained">Login</Button>
