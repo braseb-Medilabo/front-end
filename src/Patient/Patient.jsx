@@ -11,8 +11,6 @@ import instanceAxios from '../service/axios';
 
 function Patient({page, setPage}){
 
-    const apiPrefix = "/api/v1";
-
     const [formData, setFormData] = useState({
         lastName: '',
         firstName: '',
@@ -22,7 +20,7 @@ function Patient({page, setPage}){
         gender: 'M'
     });
 
-    const [errorObject, setErrorObject] = useState({isError : false, errors : {}});
+    const [errorObject, setErrorObject] = useState({isError : false, error : {}});
     
 
     useEffect(()=>{
@@ -34,21 +32,21 @@ function Patient({page, setPage}){
         e.preventDefault();
         console.log('Form submitted:', formData);
         if (page.datas != null) {
-            instanceAxios.put(apiPrefix + "/patient/" + formData.id, formData)
+            instanceAxios.put("/patient/" + formData.id, formData)
                 .then((response) => {
                     console.log('Form submitted:', formData, "all is right");
                     setPage({ ...page, page: "patientList", data: null });
                     console.log(response.status);
-                    setErrorObject({...errorObject,isError : false, errors : {}});
+                    setErrorObject({...errorObject,isError : false, error : {}});
 
                 })
                 .catch((error) => {
-                    setErrorObject({...errorObject, isError : true, errors : {status : error.status, message : error.message, }})
+                    setErrorObject({...errorObject, isError : true, error : {status : error.status, message : error.message, errors : error.errors}})
                 })
         }
                     
         else {
-            instanceAxios.post(apiPrefix + "/patient", formData).
+            instanceAxios.post("/patient", formData).
                 then((response) => {
                     console.log('Form submitted:', formData, "all is right");
                     setPage({ ...page, page: "patientList", data: null });
@@ -56,7 +54,7 @@ function Patient({page, setPage}){
 
                 })
                 .catch((error) => {
-                    setErrorObject({...errorObject, isError : true, errors : {status : error.status, message : error.message, }})
+                    setErrorObject({...errorObject, isError : true, error : {status : error.status, message : error.message, errors : error.errors}})
                 });
         }
     }
@@ -75,18 +73,18 @@ function Patient({page, setPage}){
     return (
         <div className='patient'>
         {errorObject.isError && (
-                <div className='errorMessage'> {errorObject.errors.message}</div>
+                <div className='errorMessage'> {errorObject.error.message}</div>
         )}  
         <form className="form-container" onSubmit={handleSubmit}>
             <TextField label="Lastname" 
-                        error={!!errorObject.errors?.lastName}
-                        helperText={errorObject.errors?.lastName}
+                        error={!!errorObject.error?.errors?.lastName}
+                        helperText={errorObject.error?.errors?.lastName}
                         variant="outlined" 
                         value={formData.lastName}
                         onChange={(e)=>setFormData({...formData, lastName : e.target.value})}/>
             <TextField label="Firstname" 
-                        error={!!errorObject.errors?.firstName}
-                        helperText={errorObject.errors?.firstName}
+                        error={!!errorObject.error?.errors?.firstName}
+                        helperText={errorObject.error?.errors?.firstName}
                         variant="outlined" 
                         value={formData.firstName}
                         onChange={(e)=>setFormData({...formData, firstName : e.target.value})} />
@@ -105,8 +103,8 @@ function Patient({page, setPage}){
             </Select>
             </FormControl>
             <TextField label="Date of birth" 
-                        error={!!errorObject.errors?.dateOfBirth}
-                        helperText={errorObject.errors?.dateOfBirth}
+                        error={!!errorObject.error?.errors?.dateOfBirth}
+                        helperText={errorObject.error?.errors?.dateOfBirth}
                         variant="outlined" 
                         value={formData.dateOfBirth}
                         onChange={(e)=>setFormData({...formData, dateOfBirth : e.target.value})}/>
@@ -114,7 +112,9 @@ function Patient({page, setPage}){
                         variant="outlined" 
                         value={formData.address}
                         onChange={(e)=>setFormData({...formData, address : e.target.value})}/>
-            <TextField label="Phone number" 
+            <TextField label="Phone number"
+                        error={!!errorObject.error?.errors?.phoneNumber}
+                        helperText={errorObject.error?.errors?.phoneNumber}
                         variant="outlined" 
                         value={formData.phoneNumber}
                         onChange={(e)=>setFormData({...formData, phoneNumber : e.target.value})}/>

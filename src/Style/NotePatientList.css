@@ -38,11 +38,11 @@
     color: orange;
 }
 
-.patientRisk.indanger {
+.patientRisk.in_danger {
     color: red;
 }
 
-.patientRisk.earlyonset {
+.patientRisk.early_onset {
     color: darkred;
 }
 

@@ -14,23 +14,22 @@ import { red } from '@mui/material/colors';
 
 function ListNotePatient({page, setPage}){
     const [patientNoteList, setPatientNoteList] = useState([]);
-    const [errorObject, setErrorObject] = useState({isError : false, errors : {}});
+    const [errorObject, setErrorObject] = useState({isError : false, error : {}});
     const [openDialog, setOpenDialog] = useState(false);
     const [note, setNote] = useState("");
     const [riskDiabete, setRiskDiabete] = useState("");
-
-    const apiPrefix = "/api/v1";
-
+    let index = 0;
+   
     async function fetchNotePatients(patient) {
         try{
-            const response = await instanceAxios.get(apiPrefix + "/patient/note/" + patient.id);
+            const response = await instanceAxios.get("/patient/note/" + patient.id);
             console.log('liste:', response.data, "ok");
             setPatientNoteList(response.data);
-            const risk = await instanceAxios.get(apiPrefix + "/patient/risk/" + patient.id);
+            const risk = await instanceAxios.get("/patient/risk/" + patient.id);
             setRiskDiabete(risk?.data || "");
-            setErrorObject({...errorObject,isError : false, errors : {}});
+            setErrorObject({...errorObject,isError : false, error : {}});
         }catch (error){
-            setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
+            setErrorObject({...errorObject,isError : true, error : {status : error.status, message : error.message, errors : error.errors}}); 
         }
      
         
@@ -43,10 +42,10 @@ function ListNotePatient({page, setPage}){
         console.log("Note to append :", note);
         if (!note || !page.datas) return; //security
         console.log(page);
-        instanceAxios.post(apiPrefix + "/patient/note", 
-                                    {   "patId" : page.datas.id, 
-                                        "patient" : page.datas.lastName,
-                                        "note" : note})
+        instanceAxios.post("/patient/note", 
+                            {   "patId" : page.datas.id, 
+                                "patient" : page.datas.lastName,
+                                "note" : note})
             .then ((response)=> {
                 setNote("");
                 fetchNotePatients(page.datas);
@@ -54,7 +53,7 @@ function ListNotePatient({page, setPage}){
                 
             })
             .catch((error) => {
-                setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
+                setErrorObject({...errorObject,isError : true, error : {status : error.status, message : error.message, errors : error.errors}}); 
             })
         
     };    
@@ -72,7 +71,7 @@ function ListNotePatient({page, setPage}){
     return(
             <div className='patientNoteListContainer'>
                 {errorObject.isError && (
-                <div className='errorMessage'> {errorObject.errors.message}</div>
+                <div className='errorMessage'> {errorObject.error.message}</div>
                 )}  
                 <div className='buttons'>
                     <Button type="button" variant="contained" onClick={(e) => handleOpenDialog(e, null)}>Append a note for the patient</Button>
@@ -101,7 +100,8 @@ function ListNotePatient({page, setPage}){
                     </TableHead>
                     <TableBody>
                     {patientNoteList.map((n) => (
-                        <TableRow>
+                       
+                        <TableRow key={index += 1}>
                             
                             <TableCell align="center">{n.patient}</TableCell>
                             <TableCell align="center"
@@ -127,8 +127,8 @@ function ListNotePatient({page, setPage}){
                         rows={4}
                         value={note}
                         onChange={(e) => setNote(e.target.value)}
-                        error={!!errorObject.errors?.note}
-                        helperText={errorObject.errors?.note}
+                        error={!!errorObject.error?.errors?.note}
+                        helperText={errorObject.error?.errors?.note}
                         />
                     </DialogContent>
                     <DialogActions>

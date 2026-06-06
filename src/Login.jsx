@@ -3,38 +3,38 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import React, {useState} from 'react';
 import instanceAxios from './service/axios';
+import { setAccessToken, setRefreshToken } from "./service/tokenService";
 
 
 function Login({page, setPage, authentificated, setAuthentificated}){
     
-    const apiPrefix = "/api/v1";
-    
     const [loginInfos, setLoginInfo] = useState({ident : "", pass : ""});
 
-    const handleSubmit = (e) => {
+    async function handleSubmit(e) {
         e.preventDefault();
-        //const data = new URLSearchParams();
-        //data.append("username", loginInfos.ident);
-        //data.append("password", loginInfos.pass); 
-        instanceAxios.post(apiPrefix + "/login", 
-                                        loginInfos
-                                        //{headers: {
-                                        //    "Content-Type": "application/x-www-form-urlencoded"
-                                        //    }
-                                        //}
-                        )
-        .then((response) => {
+
+        try{
+            const response = await instanceAxios.post("/auth/login",
+                                                    loginInfos)
             console.info(response.status);
             console.info(response.data);
-            setPage("accueil");
-            setAuthentificated({...authentificated, status : true, error : false, message : ""});
+            //localStorage.setItem("token", response.data?.accessToken);
+            //localStorage.setItem("refreshToken", response.data?.refreshToken);
+            setAccessToken(response.data?.accessToken);
+            setRefreshToken(response.data?.refreshToken);
             
-        })
-        .catch((error) => {
-            setAuthentificated({...authentificated, status : false, error : true, message : error.message})
-           
-        })
-        
+            const responseAuthentificated = await instanceAxios.get("/me")
+            console.info(responseAuthentificated.data);
+            setPage("accueil");
+            setAuthentificated({ ...authentificated, token: response.data?.accessToken, 
+                                                        refreshToken : response.data?.refreshToken, 
+                                                        error: false, 
+                                                        message: "", 
+                                                        userInfos: responseAuthentificated?.data });
+            
+        }catch(error){
+            setAuthentificated({ ...authentificated, token: null, error: true, message: error.message });
+        }
     }
     
     return(

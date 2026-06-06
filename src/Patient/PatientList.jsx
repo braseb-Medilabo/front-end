@@ -17,21 +17,19 @@ import { red } from '@mui/material/colors';
 
 function ListPatient({page, setPage}){
     
-    const apiPrefix = "/api/v1";
-
     const [patientList, setPatientList] = useState([]);
     const [selectedPatient, setSelectedPatient] = useState(null);
-    const [errorObject, setErrorObject] = useState({isError : false, errors : {}});
+    const [errorObject, setErrorObject] = useState({isError : false, error : {}});
 
     function fetchPatients() {
-            instanceAxios.get(apiPrefix + "/patient/list")
+            instanceAxios.get("/patient/list")
                 .then((response) => {
                     console.log('liste:', response.data, "ok");
                     setPatientList(response.data);
-                    setErrorObject({...errorObject,isError : false, errors : {}});
+                    setErrorObject({...errorObject,isError : false, error : {}});
                 })
                 .catch((error) => { 
-                                    setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
+                                    setErrorObject({...errorObject,isError : true, error : {status : error.status, message : error.message}}); 
                                 });
         }
 
@@ -59,13 +57,13 @@ function ListPatient({page, setPage}){
         if (!selectedPatient) return;
         console.info(patient);
         try {
-            await instanceAxios.delete(apiPrefix + "/patient/note/" + patient.id);
-            const response = await instanceAxios.delete(apiPrefix + "/patient/" + patient.id);
+            await instanceAxios.delete("/patient/note/" + patient.id);
+            const response = await instanceAxios.delete("/patient/" + patient.id);
             console.log(response.data);
             fetchPatients();
 
         } catch (error) {
-            setErrorObject({...errorObject,isError : true, errors : {status : error.status, message : error.message}}); 
+            setErrorObject({...errorObject,isError : true, error : {status : error.status, message : error.message}}); 
         } finally {
             setAnchorEl(null);
         }
@@ -92,7 +90,7 @@ function ListPatient({page, setPage}){
     return(
             <div className='patientListContainer'>
                 {errorObject.isError && (
-                <div className='errorMessage'> {errorObject.errors.message}</div>
+                <div className='errorMessage'> {errorObject.error.message}</div>
                 )}  
                 <div className='buttons'>
                     <Button type="button" variant="contained" onClick={(e) => onClickPatient(e, null)}>Create new Patient</Button>
