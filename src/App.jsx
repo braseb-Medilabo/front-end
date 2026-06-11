@@ -22,38 +22,38 @@ function RenderPage( {page, setPage}) {
     else if (page.page === "patientList") return <PatientList page={page} setPage={setPage} />;
     else if (page.page === "note_patient") return <NotePatientList page={page} setPage={setPage} />;
     return <div>Accueil</div>;
+}
+
+function Menu( {page, setPage}) {
+  const { authToken, logout, userInfos} = useAuth();
+
+  function handlerLogout(e) {
+    e.preventDefault();
+    // requete garder pour supprimer http cookie refreshToken(localStorage -> httpOnly)
+    instanceAxios.post('/auth/logout')
+      .then((response) => {
+        console.info("logout");
+        logout();
+        
+      })
+      .catch((response) => { console.error(response); });
   }
 
-  function Menu( {page, setPage}) {
-    const { authToken, logout, userInfos} = useAuth();
-
-    function handlerLogout(e) {
-      e.preventDefault();
-      // requete garder pour supprimmer http cookie refreshToken(localStorage -> httpOnly)
-      instanceAxios.post('/auth/logout')
-        .then((response) => {
-          console.info("logout");
-          logout();
-          
-        })
-        .catch((response) => { console.error(response); });
-    }
-
-    if (!authToken) return null;
-    
-      return (
-        <Toolbar >
-          <Button color="inherit" onClick={() => setPage({ ...page, page: "accueil", datas: null })}>Accueil</Button>
-          <Button color="inherit" onClick={() => setPage({ ...page, page: "patientList", datas: null })}>Patient liste</Button>
-          <div className="authentificatedInfos" onClick={handlerLogout}>
-               <span>{userInfos?.username || "No login"}</span>
-               {Array.isArray(userInfos?.roles)
-                          ? userInfos.roles.join(",")
-                          : "No role"}
-          </div>
-        </Toolbar>
-      );
-  }
+  if (!authToken) return null;
+  
+  return (
+    <Toolbar >
+      <Button color="inherit" onClick={() => setPage({ ...page, page: "accueil", datas: null })}>Accueil</Button>
+      <Button color="inherit" onClick={() => setPage({ ...page, page: "patientList", datas: null })}>Patient liste</Button>
+      <div className="authentificatedInfos" onClick={handlerLogout}>
+            <span>{userInfos?.username || "No login"}</span>
+            {Array.isArray(userInfos?.roles)
+                      ? userInfos.roles.join(",")
+                      : "No role"}
+      </div>
+    </Toolbar>
+  );
+}
 
 function App() {
   
