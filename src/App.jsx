@@ -1,13 +1,13 @@
-import './Style/App.css';
-import Patient from './Patient/Patient';
-import PatientList from './Patient/PatientList';
-import NotePatientList from './Patient/NotePatientList';
+import './style/App.css';
+import Patient from './patient/Patient';
+import PatientList from './patient/PatientList';
+import NotePatientList from './patient/NotePatientList';
 import Login from './Login';
 import AppBar from '@mui/material/AppBar';
 import Button from "@mui/material/Button";
 import {useState, useEffect} from 'react';
 import { Toolbar } from '@mui/material';
-import instanceAxios from './service/AxiosService';
+import instanceAxios from './service/axiosService';
 import { getAccessToken, clearTokens } from "./service/tokenService";
 import { AuthProvider, useAuth } from './service/AuthContext';
 

@@ -9,8 +9,8 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import '../Style/PatientList.css';
-import instanceAxios from '../service/AxiosService';
+import '../style/PatientList.css';
+import instanceAxios from '../service/axiosService';
 import { red } from '@mui/material/colors';
 
 

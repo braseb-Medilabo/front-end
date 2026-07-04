@@ -1,8 +1,8 @@
-import './Style/Login.css'
+import './style/Login.css'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import React, {useState} from 'react';
-import instanceAxios from './service/AxiosService';
+import instanceAxios from './service/axiosService';
 import { setAccessToken, setRefreshToken } from "./service/tokenService";
 import { useAuth } from './service/AuthContext';
 

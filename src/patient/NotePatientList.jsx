@@ -8,8 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField  } from '@mui/material';
-import '../Style/NotePatientList.css';
-import instanceAxios from '../service/AxiosService';
+import '../style/NotePatientList.css';
+import instanceAxios from '../service/axiosService';
 import { red } from '@mui/material/colors';
 
 function ListNotePatient({page, setPage}){

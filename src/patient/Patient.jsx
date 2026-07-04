@@ -1,4 +1,4 @@
-import '../Style/Patient.css';
+import '../style/Patient.css';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import React, {useState, useEffect} from 'react';
-import instanceAxios from '../service/AxiosService';
+import instanceAxios from '../service/axiosService';
 
 
 function Patient({page, setPage}){

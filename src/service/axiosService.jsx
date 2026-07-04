@@ -1,9 +1,10 @@
 import axios from "axios";
+import config from "../config/config";
 import { getAccessToken,setAccessToken, getRefreshToken, setRefreshToken, clearTokens } from "./tokenService";
 
 
 const instance = axios.create({
-   baseURL : "http://localhost:8080/api/v1",
+   baseURL : config.apiUrl,
    withCredentials : true,
    timeout : 3000
 });

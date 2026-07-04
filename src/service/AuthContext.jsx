@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { getAccessToken, setAccessToken, clearTokens, setRefreshToken } from "./tokenService";
-import instanceAxios from './AxiosService'
+import instanceAxios from './axiosService'
 
 const AuthContext = createContext(null);
 
