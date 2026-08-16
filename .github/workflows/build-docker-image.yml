@@ -46,7 +46,7 @@ jobs:
             echo "Nouvelle version détectée : ${{ steps.extract.outputs.version }}"
           fi
           
- build-and-push:
+  build-and-push:
     needs: check-version
     if: needs.check-version.outputs.should_build == 'true'
     runs-on: ubuntu-latest
