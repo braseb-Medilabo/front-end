@@ -1,8 +1,8 @@
 import axios from "axios";
-import config from "../config/config";
+//import config from "../config/config";
 import { getAccessToken,setAccessToken, getRefreshToken, setRefreshToken, clearTokens } from "./tokenService";
 
-
+const config = window.__APP_CONFIG__;
 const instance = axios.create({
    baseURL : config.apiUrl,
    withCredentials : true,

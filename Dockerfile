@@ -18,7 +18,7 @@ RUN apk add --no-cache gettext
 
 COPY --from=build /app/dist /usr/share/nginx/html
 
-COPY src/config/config-prod-template.jsx /usr/share/nginx/html/config/config-template.jsx
+COPY src/config/config-prod-template.js /usr/share/nginx/html/config/config-template.js
 
 COPY entrypoint.sh /entrypoint.sh
 

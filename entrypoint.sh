@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-envsubst < /usr/share/nginx/html/config/config-template.jsx \
-         > /usr/share/nginx/html/config/config.jsx
+envsubst < /usr/share/nginx/html/config/config-template.js \
+         > /usr/share/nginx/html/config/config.js
 
 exec nginx -g 'daemon off;'
