@@ -1,5 +1,4 @@
 import axios from "axios";
-//import config from "../config/config";
 import { getAccessToken,setAccessToken, getRefreshToken, setRefreshToken, clearTokens } from "./tokenService";
 
 const config = window.__APP_CONFIG__;
@@ -11,15 +10,14 @@ const instance = axios.create({
 
 // Interceptor exécuté avant chaque requête
 instance.interceptors.request.use(
-  (config) => {
+  (requeteConfig) => {
     const token = getAccessToken();
-
     
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      requeteConfig.headers.Authorization = `Bearer ${token}`;
     }
 
-    return config;
+    return requeteConfig;
   },
   (error) => Promise.reject(error)
 );
@@ -74,7 +72,7 @@ instance.interceptors.response.use(
                         }
 
                         const response = await axios.post(
-                           "http://localhost:8080/api/v1/auth/refresh", 
+                           config.apiUrl + "/auth/refresh",
                            refreshToken
                         );
 
