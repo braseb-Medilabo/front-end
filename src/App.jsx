@@ -11,6 +11,8 @@ import instanceAxios from './service/axiosService';
 import { getAccessToken, clearTokens } from "./service/tokenService";
 import { AuthProvider, useAuth } from './service/AuthContext';
 
+const config = window.__APP_CONFIG__;
+
 function RenderPage( {page, setPage}) {
     const {authToken} = useAuth();
 
@@ -45,12 +47,18 @@ function Menu( {page, setPage}) {
     <Toolbar >
       <Button color="inherit" onClick={() => setPage({ ...page, page: "accueil", datas: null })}>Accueil</Button>
       <Button color="inherit" onClick={() => setPage({ ...page, page: "patientList", datas: null })}>Patient liste</Button>
-      <div className="authentificatedInfos" onClick={handlerLogout}>
-            <span>{userInfos?.username || "No login"}</span>
-            {Array.isArray(userInfos?.roles)
+      <div className='infos'>
+        <div className="versionInfos">
+          <span>{"Build " + config?.deploymentVersion || "Undefined"}</span>
+        </div>
+        <div className="authentificatedInfos" onClick={handlerLogout}>
+          <span>{userInfos?.username || "No login"}</span>
+          <span>  {Array.isArray(userInfos?.roles)
                       ? userInfos.roles.join(",")
-                      : "No role"}
+                      : "No role"}</span>
+        </div>
       </div>
+      
     </Toolbar>
   );
 }
