@@ -32,13 +32,14 @@ function Menu( {page, setPage}) {
   function handlerLogout(e) {
     e.preventDefault();
     // requete garder pour supprimer http cookie refreshToken(localStorage -> httpOnly)
-    instanceAxios.post('/auth/logout')
+    /*instanceAxios.post('/auth/logout')
       .then((response) => {
         console.info("logout");
         logout();
         
       })
-      .catch((response) => { console.error(response); });
+      .catch((response) => { console.error(response); });*/
+      logout();
   }
 
   if (!authToken) return null;
